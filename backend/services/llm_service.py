@@ -1,8 +1,11 @@
 # services/llm_service.py
+#$witch to gemini:
 import openai
+
 import json
 from typing import Dict, Any, List
 from config import config
+import google.generativeai as genai
 
 class LLMService:
     """
@@ -13,7 +16,7 @@ class LLMService:
         """
         Initialize the LLM service with configuration
         """
-        openai.api_key = config['OPENAI_API_KEY']
+        genai.configure(api_key=config['GENAI_API_KEY'])
         self.model_name = config['MODEL_NAME']
         self.max_tokens = config['MAX_TOKENS']
         self.temperature = config['TEMPERATURE']
@@ -32,20 +35,14 @@ class LLMService:
         # Create a prompt for the LLM
         prompt = self._create_product_description_prompt(product_data, style)
         
-        # Call the LLM API
+        # Call the LLM API, (GEMINI)
         try:
-            response = openai.ChatCompletion.create(
-                model=self.model_name,
-                messages=[
-                    {"role": "system", "content": "You are an expert eCommerce copywriter who creates compelling product descriptions."},
-                    {"role": "user", "content": prompt}
-                ],
-                max_tokens=self.max_tokens,
-                temperature=self.temperature
-            )
+            model = genai.Model(model=self.model_name)
+            response = model.generate_content(prompt)
+            description = response.text
             
             # Parse the LLM response to extract the generated description
-            description = response.choices[0].message.content.strip()
+            #description = response.choices[0].message.content.strip() DELETED, gemini uses response.text
             
             return {
                 "detailed_description": description
@@ -69,9 +66,14 @@ class LLMService:
         """
         # Create a prompt for the LLM
         prompt = self._create_seo_content_prompt(product_data, style)
-        
         # Call the LLM API
         try:
+            #Using Gemini,
+            model = genai.Model(model=self.model_name)
+            response = model.generate_content(prompt)
+            seo_content = response.text
+            
+            '''
             response = openai.ChatCompletion.create(
                 model=self.model_name,
                 messages=[
@@ -81,9 +83,11 @@ class LLMService:
                 max_tokens=self.max_tokens,
                 temperature=self.temperature
             )
+            '''
+            
             
             # Parse the LLM response to extract SEO content
-            return self._parse_seo_response(response.choices[0].message.content)
+            return self._parse_seo_response(seo_content)
             
         except Exception as e:
             print(f"Error calling LLM API: {str(e)}")
@@ -105,6 +109,14 @@ class LLMService:
         
         # Call the LLM API
         try:
+            #call gemini API\
+
+            model = genai.Model(model=self.model_name)
+            response = model.generate_content(prompt)
+
+            email_content = response.text
+
+            '''
             response = openai.ChatCompletion.create(
                 model=self.model_name,
                 messages=[
@@ -117,6 +129,8 @@ class LLMService:
             
             # Parse the LLM response to extract email content
             email_content = response.choices[0].message.content.strip()
+            '''
+            
             
             return {
                 "subject": self._extract_email_subject(email_content),
@@ -144,6 +158,8 @@ class LLMService:
         
         # Call the LLM API
         try:
+            #Using Gemini
+            """
             response = openai.ChatCompletion.create(
                 model=self.model_name,
                 messages=[
@@ -153,9 +169,14 @@ class LLMService:
                 max_tokens=self.max_tokens,
                 temperature=self.temperature
             )
+            """
+            model = genai.Model(model=self.model_name)
+            response = model.generate_content(prompt)
+            social_media_content = response.text
+            
             
             # Parse the LLM response to extract social media content
-            return self._parse_social_media_response(response.choices[0].message.content, platforms)
+            return self._parse_social_media_response(social_media_content, platforms)
             
         except Exception as e:
             print(f"Error calling LLM API: {str(e)}")
@@ -175,7 +196,14 @@ class LLMService:
         prompt = self._create_missing_fields_prompt(product_data)
         
         # Call the LLM API
+        
         try:
+            #Using Gemini
+            model = genai.Model(model=self.model_name)
+            response = model.generate_content(prompt)
+            missing_fields = response.text
+
+            """
             response = openai.ChatCompletion.create(
                 model=self.model_name,
                 messages=[
@@ -185,9 +213,11 @@ class LLMService:
                 max_tokens=self.max_tokens,
                 temperature=self.temperature
             )
+            """
+            
             
             # Parse the LLM response to extract missing fields
-            return self._parse_missing_fields_response(response.choices[0].message.content, product_data)
+            return self._parse_missing_fields_response(missing_fields, product_data)
             
         except Exception as e:
             print(f"Error calling LLM API: {str(e)}")
@@ -276,7 +306,7 @@ class LLMService:
             print(f"Error calling image generation API: {str(e)}")
             raise Exception(f"Failed to generate product image: {str(e)}")
     
-    # Helper methods for creating prompts
+    # Helper methods for creating prompts ========================================================================================
     
     def _create_product_description_prompt(self, product_data: Dict[str, Any], style: Dict[str, Any]) -> str:
         """
@@ -383,7 +413,22 @@ class LLMService:
         # TODO: Implement your prompt engineering strategy for SEO content
         # CANDIDATE: IMPLEMENT THIS FUNCTION
         
-        prompt = "Generate SEO-optimized title and meta description for a product. Add your implementation."
+        prompt = f"""Generate SEO-optimized title and meta description for the following product with these details: 
+        
+        Product Name: {product_data.get("name", "")}
+        Brand: {product_data.get("brand", "")}
+        Category: {product_data.get("category", "")}
+        Price: ${product_data.get("price", "")}
+        Features: {", ".join(product_data.get("features", []))}
+
+        Write the title based on these given styles:
+        Tone: {style.get("tone", "professional")}
+        Length: {style.get("length", "medium")}
+
+        Now format the title in this way:
+        Title: [SEO Title]
+        Description: [SEO Meta Description]
+"""
         
         return prompt
     
@@ -401,7 +446,22 @@ class LLMService:
         # TODO: Implement your prompt engineering strategy for marketing emails
         # CANDIDATE: IMPLEMENT THIS FUNCTION
         
-        prompt = "Generate a marketing email for a product. Add your implementation."
+        prompt = f"""Generate a marketing email for a product with the following details:
+        Product Name: {product_data.get("name", "")} 
+        Brand: {product_data.get("brand", "")}
+        Price: ${product_data.get("price", "")}
+        Category: {product_data.get("category", "")}
+        Features: {", ".join(product_data.get("features", []))}
+
+        Write the email in this style:
+        Tone: {style.get("tone", "enthusiastic")}
+        Length: {style.get("length", "medium")}
+        Now format the email in this way:
+
+        Subject Line: [Email Subject]
+
+        Saluation: [Greeting] 
+        Email Body: [Email Body] """
         
         return prompt
     
@@ -525,7 +585,13 @@ And so on for each requested platform.
         # TODO: Implement your prompt engineering strategy for generating missing fields
         # CANDIDATE: IMPLEMENT THIS FUNCTION
         
-        prompt = "Generate missing product fields. Add your implementation."
+        prompt = f"""Given the following partial product data, fill in the missing fields to make the data more complete and market ready.
+        For completed values, do not modify or change them in any way. For missing values, use external domain knowledge to infer the best possible values for this
+        product of the same category.
+        
+        Partial Product Data: {json.dumps(product_data, indent=2)}
+
+        Return ONLY the completed product data in JSON format with the ONLY the missing fields with values."""
         
         return prompt
     
@@ -543,7 +609,20 @@ And so on for each requested platform.
         # TODO: Implement your prompt engineering strategy for image generation
         # CANDIDATE: IMPLEMENT THIS FUNCTION
         
-        prompt = "Generate a product image. Add your implementation."
+
+        prompt = f"""Generate a high-quality product image for {product_data.get("name", "product")}, made by {product_data.get("brand", "")}, in the {product_data.get("category", "")} category.
+        The product has features: {",".join(product_data.get("features", []))}.
+        It comes in the following colors: {",".join(product_data.get("colors", []))}, and is made of {",".join(product_data.get("materials", []))}.
+        Style the product to look {",".join(product_data.get("vibe", "modern and clean"))}, placed in a background that feels natural for its use.
+        For example:
+        - If it's a kitchen appliance, place it in a kitchen setting, like the kitchen counter.
+        - If it's a fashion item, place it in a lifestyle setting.
+        - If it's a electronic device such as a phone, place it on a stand.
+        - If it's a furniture item, place it in a room setting while being able to showcase the product item.
+        - For items like Yoga mats, place it on hardwood or clean indoor floor surfaces.
+
+        Ensure the product is in the centre of the image, with no logos, watermarks, or text.
+        """
         
         return prompt
     
@@ -621,9 +700,14 @@ And so on for each requested platform.
         """
         # TODO: Implement your parsing logic for email subject extraction
         # CANDIDATE: IMPLEMENT THIS FUNCTION
+        result = ""
+        for line in email_content.split('\n'):
+            if line.lower().startswith("subject line:"):
+                result = line[len("subject line:"):].strip()
+                break
         
         # Basic implementation - assuming "Subject Line:" format
-        return "Sample Subject Line"
+        return result
     
     def _extract_email_body(self, email_content: str) -> str:
         """
@@ -631,9 +715,20 @@ And so on for each requested platform.
         """
         # TODO: Implement your parsing logic for email body extraction
         # CANDIDATE: IMPLEMENT THIS FUNCTION
-        
+
+        result = []
+        body_started = False
         # Basic implementation - assuming "Email Body:" format
-        return "Sample email body content."
+        for line in email_content.split('\n'):
+            if(body_started):
+                result.append(line.strip())
+            elif line.lower().startswith("email body:"):
+                #Returns False if theres no text after colon:
+                check_line_end = line[len("email body:"):].strip()
+                if(check_line_end):
+                    result.append(check_line_end)
+                body_started = True
+        return "\n".join(result).strip()
     
     def _parse_social_media_response(self, response_text: str, platforms: Dict[str, bool]) -> Dict[str, str]:
         """
@@ -717,4 +812,11 @@ And so on for each requested platform.
         # CANDIDATE: IMPLEMENT THIS FUNCTION
         
         # Basic implementation - should be replaced with proper parsing
-        return {"category": "Sample Category", "features": ["Sample Feature 1", "Sample Feature 2"]}
+        result = {}
+        try:
+            result = json.loads(response_text)
+            return result
+        #Handle exception
+        except json.JSONDecodeError as e:
+            print(f"Failed to parse missing fields JSON: {e}")
+        return result
