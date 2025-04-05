@@ -100,6 +100,11 @@ async def generate_content(request: ContentRequest):
                 generated_content["social_media"] = llm_service.generate_social_media_content(
                     product_data, request.style.dict(), request.social_media.dict()
                 )
+            #Add Image Generation:
+            elif content_type == "image":
+                generated_content["image"] = llm_service.generate_product_image(
+                    product_data, request.style.dict()
+                )
             elif content_type == "missing_fields":
                 generated_content["missing_fields"] = llm_service.generate_missing_fields(
                     product_data

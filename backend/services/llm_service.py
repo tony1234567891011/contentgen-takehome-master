@@ -5,7 +5,6 @@ import openai
 import json
 from typing import Dict, Any, List
 from config import config
-import google.generativeai as genai
 
 class LLMService:
     """
@@ -16,7 +15,7 @@ class LLMService:
         """
         Initialize the LLM service with configuration
         """
-        genai.configure(api_key=config['GENAI_API_KEY'])
+        openai.api_key = config['OPENAI_API_KEY']
         self.model_name = config['MODEL_NAME']
         self.max_tokens = config['MAX_TOKENS']
         self.temperature = config['TEMPERATURE']
@@ -35,14 +34,20 @@ class LLMService:
         # Create a prompt for the LLM
         prompt = self._create_product_description_prompt(product_data, style)
         
-        # Call the LLM API, (GEMINI)
+        # Call the LLM API,
         try:
-            model = genai.Model(model=self.model_name)
-            response = model.generate_content(prompt)
-            description = response.text
+            response = openai.ChatCompletion.create(
+                model=self.model_name,
+                messages=[
+                    {"role": "system", "content": "You are an expert product description writer."},
+                    {"role": "user", "content": prompt}
+                ],
+                max_tokens=self.max_tokens,
+                temperature=self.temperature
+            )
+            description = response.choices[0].message.content.strip()
             
             # Parse the LLM response to extract the generated description
-            #description = response.choices[0].message.content.strip() DELETED, gemini uses response.text
             
             return {
                 "detailed_description": description
@@ -68,12 +73,6 @@ class LLMService:
         prompt = self._create_seo_content_prompt(product_data, style)
         # Call the LLM API
         try:
-            #Using Gemini,
-            model = genai.Model(model=self.model_name)
-            response = model.generate_content(prompt)
-            seo_content = response.text
-            
-            '''
             response = openai.ChatCompletion.create(
                 model=self.model_name,
                 messages=[
@@ -83,7 +82,7 @@ class LLMService:
                 max_tokens=self.max_tokens,
                 temperature=self.temperature
             )
-            '''
+            seo_content = response.choices[0].message.content.strip()
             
             
             # Parse the LLM response to extract SEO content
@@ -109,14 +108,6 @@ class LLMService:
         
         # Call the LLM API
         try:
-            #call gemini API\
-
-            model = genai.Model(model=self.model_name)
-            response = model.generate_content(prompt)
-
-            email_content = response.text
-
-            '''
             response = openai.ChatCompletion.create(
                 model=self.model_name,
                 messages=[
@@ -129,7 +120,6 @@ class LLMService:
             
             # Parse the LLM response to extract email content
             email_content = response.choices[0].message.content.strip()
-            '''
             
             
             return {
@@ -158,8 +148,6 @@ class LLMService:
         
         # Call the LLM API
         try:
-            #Using Gemini
-            """
             response = openai.ChatCompletion.create(
                 model=self.model_name,
                 messages=[
@@ -169,11 +157,7 @@ class LLMService:
                 max_tokens=self.max_tokens,
                 temperature=self.temperature
             )
-            """
-            model = genai.Model(model=self.model_name)
-            response = model.generate_content(prompt)
-            social_media_content = response.text
-            
+            social_media_content = response.choices[0].message.content.strip()
             
             # Parse the LLM response to extract social media content
             return self._parse_social_media_response(social_media_content, platforms)
@@ -198,12 +182,7 @@ class LLMService:
         # Call the LLM API
         
         try:
-            #Using Gemini
-            model = genai.Model(model=self.model_name)
-            response = model.generate_content(prompt)
-            missing_fields = response.text
-
-            """
+            # Call the OpenAI API to generate missing fields
             response = openai.ChatCompletion.create(
                 model=self.model_name,
                 messages=[
@@ -213,7 +192,8 @@ class LLMService:
                 max_tokens=self.max_tokens,
                 temperature=self.temperature
             )
-            """
+
+            missing_fields = response.choices[0].message.content.strip()
             
             
             # Parse the LLM response to extract missing fields
@@ -613,7 +593,7 @@ And so on for each requested platform.
         prompt = f"""Generate a high-quality product image for {product_data.get("name", "product")}, made by {product_data.get("brand", "")}, in the {product_data.get("category", "")} category.
         The product has features: {",".join(product_data.get("features", []))}.
         It comes in the following colors: {",".join(product_data.get("colors", []))}, and is made of {",".join(product_data.get("materials", []))}.
-        Style the product to look {",".join(product_data.get("vibe", "modern and clean"))}, placed in a background that feels natural for its use.
+        Style the product to look {",".join(product_data.get("vibe", "modern and clean"))}, placed in a background that feels natural for its use, in other words its background should follow the {style.get("Contextual", "")}.
         For example:
         - If it's a kitchen appliance, place it in a kitchen setting, like the kitchen counter.
         - If it's a fashion item, place it in a lifestyle setting.

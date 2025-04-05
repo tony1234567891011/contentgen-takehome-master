@@ -96,7 +96,7 @@ const ProductForm = ({ products, selectedProduct, customProduct, onProductSelect
           </div>
           
           <div className="form-group">
-            <label htmlFor="basic_description">Basic Description:</label>
+            <label htmlFor="dbasic_escription">Basic Description:</label>
             <textarea
               id="basic_description"
               name="basic_description"
