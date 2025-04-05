@@ -593,7 +593,7 @@ And so on for each requested platform.
         prompt = f"""Generate a high-quality product image for {product_data.get("name", "product")}, made by {product_data.get("brand", "")}, in the {product_data.get("category", "")} category.
         The product has features: {",".join(product_data.get("features", []))}.
         It comes in the following colors: {",".join(product_data.get("colors", []))}, and is made of {",".join(product_data.get("materials", []))}.
-        Style the product to look {",".join(product_data.get("vibe", "modern and clean"))}, placed in a background that feels natural for its use, in other words its background should follow the {style.get("Contextual", "")}.
+        Style the product to look {",".join(product_data.get("vibe", []))}, placed in a background that feels natural for its use.
         For example:
         - If it's a kitchen appliance, place it in a kitchen setting, like the kitchen counter.
         - If it's a fashion item, place it in a lifestyle setting.

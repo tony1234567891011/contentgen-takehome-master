@@ -28,9 +28,7 @@ const GeneratedContent = ({ content, contentTypes, isLoading }) => {
             <div className="content-box">
               <p>{content.product_description.detailed_description}</p>
             </div>
-            <button className="copy-btn" onClick={() => navigator.clipboard.writeText(content.product_description.detailed_description)}>
-              Copy to Clipboard
-            </button>
+            
           </div>
         );
         
@@ -285,13 +283,19 @@ const GeneratedContent = ({ content, contentTypes, isLoading }) => {
           </div>
           
           <div className="content-panel">
-            {hasContent(activeTab) ? (
-              renderContent(activeTab)
-            ) : (
+            {/* Render all Content we chose to generate */}
+            {contentTypes.map(type => hasContent(type) ? renderContent(type) : (
               <div className="no-content-message">
                 <p>No content generated for this type yet. Click "Generate Content" to create content.</p>
               </div>
-            )}
+            ))}
+
+
+
+
+
+
+
           </div>
         </div>
       ) : (
