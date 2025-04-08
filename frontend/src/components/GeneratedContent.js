@@ -37,13 +37,14 @@ const GeneratedContent = ({ content, contentTypes, isLoading }) => {
               {isEditingDescription ? (
                 <textarea
                   value={editedDescription}
+                  //Take input
                   onChange={(e) => setEditedDescription(e.target.value)}
                   style={{ width: '100%' }}
                   />
               ) : null}
             </div>
 
-
+            {/* Since in editing, handle the modification:*/}
             {isEditingDescription ? (
               <div>
                 <button className="save-btn" onClick={() => //Handle save logic
@@ -261,11 +262,19 @@ const GeneratedContent = ({ content, contentTypes, isLoading }) => {
             <div className="content-section">
               <h4>Image</h4>
               <div className="content-box image-container">
+                <a 
+                href={content.product_image.image_url} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="download-link"
+              >
+                {/* Image */}
                 <img 
                   src={content.product_image.image_url} 
                   alt="Generated product" 
                   className="generated-image" 
                 />
+              </a>
               </div>
               {/* Copy prompt section 
               <div className="content-section">
@@ -278,15 +287,6 @@ const GeneratedContent = ({ content, contentTypes, isLoading }) => {
                   Copy Prompt
                 </button>
               </div>*/}
-              
-              <a 
-                href={content.product_image.image_url} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="download-link"
-              >
-                Open Full Size Image
-              </a>
             </div>
           </div>
         );
