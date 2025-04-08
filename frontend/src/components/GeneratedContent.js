@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
 
+//Use State
+
+
 const GeneratedContent = ({ content, contentTypes, isLoading }) => {
   // State for the active tab
   const [activeTab, setActiveTab] = useState(contentTypes[0] || 'product_description');
+  const [isEditingSEO, setIsEditingSEO] = useState(false);
+  const [isEditingEmail, setIsEditingEmail] = useState(false);
+  const [isEditingDescription, setIsEditingDescription] = useState(false);
+  const [editedDescription, setEditedDescription] = useState("");
   
   // Handle tab click
   const handleTabClick = (tab) => {
@@ -19,7 +26,6 @@ const GeneratedContent = ({ content, contentTypes, isLoading }) => {
     if (!content || !content[type]) {
       return null;
     }
-    
     switch (type) {
       case 'product_description':
         return (
@@ -27,8 +33,40 @@ const GeneratedContent = ({ content, contentTypes, isLoading }) => {
             <h3>Product Description</h3>
             <div className="content-box">
               <p>{content.product_description.detailed_description}</p>
+              {/* Check if editing*/}
+              {isEditingDescription ? (
+                <textarea
+                  value={editedDescription}
+                  onChange={(e) => setEditedDescription(e.target.value)}
+                  style={{ width: '100%' }}
+                  />
+              ) : null}
             </div>
-            
+
+
+            {isEditingDescription ? (
+              <div>
+                <button className="save-btn" onClick={() => //Handle save logic
+                {content.product_description.detailed_description = editedDescription;
+                setIsEditingDescription(false)
+                setEditedDescription(content.product_description.detailed_description);
+                }}>Save</button>
+                <button
+                      className="cancel-btn"
+                      onClick={() => {
+                        setIsEditingDescription(false);
+                        setEditedDescription(content.product_description.detailed_description);
+                      }}
+                    >
+                      Cancel
+                    </button>
+              </div>
+            ) : (
+              <button className="edit-btn" onClick={() => {
+                setIsEditingDescription(true)
+                setEditedDescription(content.product_description.detailed_description)
+              }}>Edit</button>
+            )}
           </div>
         );
         
@@ -229,15 +267,18 @@ const GeneratedContent = ({ content, contentTypes, isLoading }) => {
                   className="generated-image" 
                 />
               </div>
+              {/* Copy prompt section 
               <div className="content-section">
                 <h4>Prompt Used</h4>
+                
                 <div className="content-box">
                   <p>{content.product_image.prompt}</p>
                 </div>
                 <button className="copy-btn" onClick={() => navigator.clipboard.writeText(content.product_image.prompt)}>
                   Copy Prompt
                 </button>
-              </div>
+              </div>*/}
+              
               <a 
                 href={content.product_image.image_url} 
                 target="_blank" 
