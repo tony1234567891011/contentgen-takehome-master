@@ -6,8 +6,16 @@ import React, { useState } from 'react';
 const GeneratedContent = ({ content, contentTypes, isLoading }) => {
   // State for the active tab
   const [activeTab, setActiveTab] = useState(contentTypes[0] || 'product_description');
-  const [isEditingSEO, setIsEditingSEO] = useState(false);
+
+  const [isEditingSEOTitle, setIsEditingSEOTitle] = useState(false);
+  const [isEditingSEODescription, setIsEditingSEODescription] = useState(false);
+  const [editedSEOTitle, setEditedSEOTitle] = useState("");
+  const [editedSEODescription, setEditedSEODescription] = useState("");
+
   const [isEditingEmail, setIsEditingEmail] = useState(false);
+  const [editedEmail, setEditedEmail] = useState("");
+
+
   const [isEditingDescription, setIsEditingDescription] = useState(false);
   const [editedDescription, setEditedDescription] = useState("");
   
@@ -78,9 +86,52 @@ const GeneratedContent = ({ content, contentTypes, isLoading }) => {
             
             <div className="content-section">
               <h4>Title Tag</h4>
+
+
+
               <div className="content-box">
                 <p>{content.seo.title}</p>
+                {/* Check if editing*/}
+              {isEditingSEOTitle ? (
+                <input
+                  value={editedSEOTitle}
+                  //Take input
+                  onChange={(e) => setEditedSEOTitle(e.target.value)}
+                  style={{ width: '100%' }}
+                  />
+              ) : null}
+
               </div>
+            {/* Since in editing, handle the modification:*/}
+            {isEditingSEOTitle ? (
+              <div>
+                <button className="seo-save-btn" onClick={() => //Handle save logic
+                {content.seo.title = editedSEOTitle;
+                setIsEditingSEOTitle(false)
+                setEditedSEOTitle(content.seo.title);
+                }}>Save</button>
+                <button
+                      className="seo-cancel-btn"
+                      onClick={() => {
+                        setIsEditingSEOTitle(false);
+                        setEditedSEOTitle(content.seo.title);
+                      }}
+                    >
+                      Cancel
+                    </button>
+              </div>
+            ) : (
+              <div>
+                <button className="copy-btn" onClick={() => navigator.clipboard.writeText(content.seo.title)}>
+                Copy Title
+                </button>
+                <button className="seo-edit-btn" onClick={() => {
+                setIsEditingSEOTitle(true);
+                setEditedSEOTitle(content.seo.title);
+              }}>Edit</button>
+              </div>
+            )}  
+
               <p className="character-count">
                 {content.seo.title.length} characters
                 {content.seo.title.length > 60 ? 
@@ -89,27 +140,64 @@ const GeneratedContent = ({ content, contentTypes, isLoading }) => {
                     " (Near limit)" : 
                   ""}
               </p>
-              <button className="copy-btn" onClick={() => navigator.clipboard.writeText(content.seo.title)}>
-                Copy Title
-              </button>
+              
             </div>
             
             <div className="content-section">
               <h4>Meta Description</h4>
+
               <div className="content-box">
                 <p>{content.seo.description}</p>
+                {/* Check if editing*/}
+              {isEditingSEODescription ? (
+                <textarea
+                  value={editedSEODescription}
+                  //Take input
+                  onChange={(e) => setEditedSEODescription(e.target.value)}
+                  style={{ width: '100%' }}
+                  />
+              ) : null}
               </div>
+
+              {/* Since in editing, handle the modification:*/}
+            {isEditingSEODescription ? (
+              <div>
+                <button className="seo-save-btn" onClick={() => //Handle save logic
+                {content.seo.description = editedSEODescription;
+                setIsEditingSEODescription(false)
+                setEditedSEODescription(content.seo.detailed_description);
+                }}>Save</button>
+                <button
+                      className="seo-cancel-btn"
+                      onClick={() => {
+                        setIsEditingSEODescription(false);
+                        setEditedSEODescription(content.seo.description);
+                      }}
+                    >
+                      Cancel
+                    </button>
+              </div>
+            ) : (
+              <div>
+                <button className="copy-btn" onClick={() => navigator.clipboard.writeText(content.seo.description)}>
+                Copy Description
+                </button>
+                <button className="seo-edit-btn" onClick={() => {
+                setIsEditingSEODescription(true);
+                setEditedSEODescription(content.seo.description);
+              }}>Edit</button>
+              </div>
+            )}
+
+
               <p className="character-count">
                 {content.seo.description.length} characters
                 {content.seo.description.length > 150 ? 
-                  content.seo.description.length > 160 ? 
+                  content.seo.description.length > 160 ? // LIMIT !!!! 
                     " (Too long!)" : 
                     " (Near limit)" : 
                   ""}
               </p>
-              <button className="copy-btn" onClick={() => navigator.clipboard.writeText(content.seo.description)}>
-                Copy Description
-              </button>
             </div>
           </div>
         );
