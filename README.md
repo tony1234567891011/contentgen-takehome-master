@@ -30,12 +30,8 @@ As a brief overview, my job is to build a product description generator that lev
   - Customizing tone, length, and style of generated content
   - Generating product images based on product attributes
 
-# Time Spent - 20 hours divided into: Up to 15 hours of coding + debugging and 5 hours to review any changes I would like to make.
+## Time Spent - 20 hours divided into: Up to 15 hours of coding + debugging and 5 hours to review any changes I would like to make.
 
-
-### Starter Kit
-
-We've provided a starter kit to help you focus on the core technical challenges rather than boilerplate setup. The kit includes:
 
 ### Setup Instructions
 
