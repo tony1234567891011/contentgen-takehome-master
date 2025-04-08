@@ -148,6 +148,7 @@ function App() {
             ...data.generated_content
           }));
         }
+        
       } else {
         // Handle all other content types through the regular endpoint
         // Create request data

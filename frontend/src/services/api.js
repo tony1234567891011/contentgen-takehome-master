@@ -60,8 +60,10 @@ export const completeProduct = async (requestData) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(requestData),
+      body: JSON.stringify(requestData)
     });
+
+    console.log('Request sent to completeProduct:', requestData);
     
     if (!response.ok) {
       const errorData = await response.json();

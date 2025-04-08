@@ -588,12 +588,12 @@ And so on for each requested platform.
         """
         # TODO: Implement your prompt engineering strategy for image generation
         # CANDIDATE: IMPLEMENT THIS FUNCTION
-        
+        keywords = style.get("keywords", [])
 
         prompt = f"""Generate a high-quality product image for {product_data.get("name", "product")}, made by {product_data.get("brand", "")}, in the {product_data.get("category", "")} category.
         The product has features: {",".join(product_data.get("features", []))}.
         It comes in the following colors: {",".join(product_data.get("colors", []))}, and is made of {",".join(product_data.get("materials", []))}.
-        Style the product to look {",".join(product_data.get("vibe", []))}, placed in a background that feels natural for its use.
+        Consider the style keywords: {",".join(keywords)} the product to look {",".join(product_data.get("vibe", []))}, placed in a background that feels natural for its use.
         For example:
         - If it's a kitchen appliance, place it in a kitchen setting, like the kitchen counter.
         - If it's a fashion item, place it in a lifestyle setting.
@@ -601,6 +601,8 @@ And so on for each requested platform.
         - If it's a furniture item, place it in a room setting while being able to showcase the product item.
         - For items like Yoga mats, place it on hardwood or clean indoor floor surfaces.
 
+        
+        U
         Ensure the product is in the centre of the image, with no logos, watermarks, or text.
         """
         

@@ -266,6 +266,8 @@ const GeneratedContent = ({ content, contentTypes, isLoading }) => {
         </div>
       ) : content ? (
         <div className="content-tabs-container">
+          {/* Tabs for different content types 
+          
           <div className="content-tabs">
             {contentTypes.map(type => (
               <button
@@ -281,7 +283,7 @@ const GeneratedContent = ({ content, contentTypes, isLoading }) => {
               </button>
             ))}
           </div>
-          
+          */}
           <div className="content-panel">
             {/* Render all Content we chose to generate */}
             {contentTypes.map(type => hasContent(type) ? renderContent(type) : (

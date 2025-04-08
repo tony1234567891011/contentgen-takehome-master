@@ -145,6 +145,23 @@ async def generate_image(request: Dict[str, Any]):
     except Exception as e:
         # Handle any errors from the LLM or Image Generation API
         raise HTTPException(status_code=500, detail=str(e))
+    
+#Create a new endpoint for generating missing fields
+@app.post("/api/complete-product")
+async def complete_product(request: Dict[str, Any]):
+    """
+    Complete missing product fields based on existing data
+    """
+    try:
+        product_data = request.get("product_data")
+        if not product_data:
+            raise HTTPException(status_code=400, detail="Product data must be provided")
+
+        result = llm_service.generate_missing_fields(product_data)
+        return result
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 # Custom exception handler for more user-friendly error messages
 @app.exception_handler(Exception)

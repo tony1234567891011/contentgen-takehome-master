@@ -103,6 +103,24 @@ const StyleOptions = ({
       [name]: value
     });
   };
+
+  const handleImageKeyWordsChange = (e) => {
+    const keywords = e.target.value
+    // Check for input value
+    if(keywords) {
+      const keywordsArray = keywords.split(',').map(keyword => keyword.trim());
+      onImageStyleChange({
+        ...imageStyleOptions,
+        keywords: keywordsArray
+      });
+    }
+    else {
+      onImageStyleChange({
+        ...imageStyleOptions,
+        keywords: []
+      });
+    }
+  }
   
   return (
     <div className="style-options-container">
@@ -156,7 +174,6 @@ const StyleOptions = ({
           ))}
         </select>
       </div>
-      
       <div className="style-option">
         <label htmlFor="keywords">Keywords (comma-separated):</label>
         <input
@@ -269,6 +286,21 @@ const StyleOptions = ({
               ))}
             </select>
           </div>
+          {/* Add more image Prompt */}
+          <div className="style-option">
+            <label htmlFor="imageKeywords">Image Keywords (comma-separated):</label>
+            <input
+              type="text"
+              id="imageKeywords"
+              value={imageStyleOptions.keywords ? imageStyleOptions.keywords.join(', ') : ''}
+              onChange={handleImageKeyWordsChange}
+              placeholder="e.g., modern, sleek, vibrant"
+            />
+        </div>
+
+
+
+          
         </div>
       )}
     </div>
