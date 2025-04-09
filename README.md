@@ -14,36 +14,38 @@ As a brief overview, my job is to build a product description generator that lev
 
 ### Methodologies:
 
+#### Prompt Engineering
 
 #### Challenges:
-- Develop a REST API using FastAPI that interfaces with an LLM (OpenAI GPT-3.5-turbo or similar)
-- Implement prompt engineering to generate:
-  - Compelling product descriptions
-  - SEO-optimized titles and meta descriptions
-  - Marketing copy in various formats (email, social media, etc.)
-  - Missing product fields (categories, tags, features, etc.)
-  - Image descriptions based on product data
-  - Product image generation prompts for DALL-E or similar image generation models
-- Create endpoints for:
-  - Processing product data and generating content
-  - Selecting different content types and formats
-  - Customizing tone, length, and style of generated content
-  - Generating product images based on product attributes
+- Navigating through code to add front-end features, and organizing React components in a nice manner. Added comments to help me implement features without forgetting what the code above does
+- Familiarizing and utilizing technologies like FastAPI to create the complete product endpoint. Learned every type of endpoint, used Post endpoint to complete products.
+- UX dilemmas - Figuring how ways to improve how the user interface could be more intuitive. Removed unncessary 
+- Compatibility issues with my technologies, as my first alternative was using Gemini, however defaulted to OpenAI API due to Pydantic 1.10.7.
+- Frontend backend sync errors, leading to products.json failing to show, or failing to generate. Fixed by rebuilding the API endpoint, returning in json format.
 
-## Time Spent - 20 hours divided into: Up to 15 hours of coding + debugging and 5 hours to review any changes I would like to make.
+
+## Time Spent - 20 hours divided into: 5 hours of familiarizing with tech stack, Up to 10 hours of coding + debugging and 5 hours to review any changes I would like to make.
 
 
 ### Setup Instructions
 
   #### Backend Setup
+  Note: Ensure you are using Python 3.11 or lower.
   1. Navigate to the `backend` directory
   2. Create a virtual environment: `python -m venv venv`
   3. Activate the virtual environment:
      - Windows: `venv\Scripts\activate`
      - macOS/Linux: `source venv/bin/activate`
   4. Install dependencies: `pip install -r requirements.txt`
-  5. Create a `.env` file based on `.env.example` and add your LLM API key
-  6. Run the application: `uvicorn app:app --host 0.0.0.0 --port 5000 --reload`
+  5. Create a `.env` file containing:
+     
+     OPENAI_API_KEY
+      MODEL_NAME=[MODEL NAME]
+      MAX_TOKENS=[Token Number HERE]
+      TEMPERATURE=[TEMPERATURE_VALUE]
+      DATA_PATH=data/products.json
+    
+  7. Run the application: `uvicorn app:app --host 0.0.0.0 --port 8000 --reload` (Note: Change port to 5000 in source code, then run port 5000. For MacOS, cannot use port 5000.)
 
 #### Frontend Setup
   1. Navigate to the `frontend` directory
