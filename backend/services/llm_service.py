@@ -394,16 +394,16 @@ class LLMService:
         # CANDIDATE: IMPLEMENT THIS FUNCTION
         
         prompt = f"""Generate SEO-optimized title and meta description for the following product using (some or all) these details:
-"""
+            """
         # Brand:
         if(product_data.get("brand", "")):
-            prompt += f"Brand: {product_data.get("brand", "")}\n"
+            prompt += f"Brand: {product_data.get('brand', '')}\n"
         # Category:
         if(product_data.get("category", "")):
-            prompt += f"Category: {product_data.get("category", "")}\n"
+            prompt += f"Category: {product_data.get('category', '')}\n"
         # Price:
         if(product_data.get("price", "")):
-            prompt += f"Price: ${product_data.get("price", "")}\n"
+            prompt += f"Price: ${product_data.get('price', '')}\n"
         # Basic description:
         if(product_data.get('basic_description')):
             prompt += f"Basic Description: {product_data['basic_description']}\n"
@@ -416,7 +416,7 @@ class LLMService:
         if(product_data.get('audience')):
             prompt += f"Consider the target audience:\n {product_data.get('audience', 'general consumers')}\n"
         
-        prompt += f"and apply the following tone and style: {style.get("tone", "professional")}, {style.get("length", "medium")}\n"
+        prompt += f"and apply the following tone and style: {style.get('tone', 'professional')}, {style.get('length', 'medium')}\n"
         prompt += f"""Return your response: title and description in this format:
         
         Title: [SEO Title]
@@ -443,12 +443,12 @@ class LLMService:
         """
 
         # Add any additional instructions or context for the email
-        prompt += f"\nProduct Name: {product_data.get("name", "")}\n"
+        prompt += f"\nProduct Name: {product_data.get('name', '')}\n"
         if(product_data.get("brand", "")):
-            prompt += f"Brand: {product_data.get("brand", "")}\n"
+            prompt += f"Brand: {product_data.get('brand', '')}\n"
         #Category:
-        if(product_data.get("category", "")):
-            prompt += f"Category: {product_data.get("category", "")}\n"
+        if(product_data.get('category', '')):
+            prompt += f"Category: {product_data.get('category', '')}\n"
         if(product_data.get('basic_description')):
             prompt += f"Basic Description: {product_data['basic_description']}\n"
         if(product_data.get('features')):
@@ -627,15 +627,15 @@ And so on for each requested platform.
         """
         # TODO: Implement your prompt engineering strategy for image generation
         # CANDIDATE: IMPLEMENT THIS FUNCTION
-        keywords = style.get("keywords", [])
+        keywords = style.get('keywords', [])
 
         prompt = f"""Generate a high-quality product 600 x 600 pixel image of a product based on the given details:"""
         # Key information:
         prompt += f"\n\n Product Name: {product_data.get('name', '')}\n"
-        if(product_data.get("brand", "")):
-            prompt += f"Brand: {product_data.get("brand", "")}\n"
-        if(product_data.get("category", "")):
-            prompt += f"Category: {product_data.get("category", "")}\n"
+        if(product_data.get('brand')):
+            prompt += f"Brand: {product_data.get('brand', '')}\n"
+        if(product_data.get('category')):
+            prompt += f"Category: {product_data.get('category', '')}\n"
 
         prompt += "\n"
         #Basic description:
@@ -663,7 +663,7 @@ And so on for each requested platform.
 
         prompt += "\n\n I need the image to have this type of background:"
         if(product_data.get('background')):
-            prompt += f"\Style: {",".join(product_data['background'])}\n"
+            prompt += f"\Style: {','.join(product_data['background'])}\n"
         else:
             prompt += f"\Style: Contextual\n"
             prompt += f"""\n For example:
@@ -676,7 +676,7 @@ And so on for each requested platform.
         #User input:
         if(len(keywords) > 0):
             prompt += "\n Tailor your image to the user preferred specifications:"
-            prompt += f"\nStyle: {",".join(keywords)}\n"
+            prompt += f"\nStyle: {','.join(keywords)}\n"
         
         prompt += "\nEnsure the product is in the centre of the image, completely visible, with no logos, watermarks, or text."
         return prompt
