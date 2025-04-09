@@ -393,23 +393,36 @@ class LLMService:
         # TODO: Implement your prompt engineering strategy for SEO content
         # CANDIDATE: IMPLEMENT THIS FUNCTION
         
-        prompt = f"""Generate SEO-optimized title and meta description for the following product with these details: 
+        prompt = f"""Generate SEO-optimized title and meta description for the following product using (some or all) these details:
+"""
+        # Brand:
+        if(product_data.get("brand", "")):
+            prompt += f"Brand: {product_data.get("brand", "")}\n"
+        # Category:
+        if(product_data.get("category", "")):
+            prompt += f"Category: {product_data.get("category", "")}\n"
+        # Price:
+        if(product_data.get("price", "")):
+            prompt += f"Price: ${product_data.get("price", "")}\n"
+        # Basic description:
+        if(product_data.get('basic_description')):
+            prompt += f"Basic Description: {product_data['basic_description']}\n"
+        # Key selling points:
+        if(product_data.get('features')):
+            prompt += "\nKey Selling Points:\n"
+            for feature in product_data['features']:
+                prompt += f"- {feature}\n"
+        # Target audience:
+        if(product_data.get('audience')):
+            prompt += f"Consider the target audience:\n {product_data.get('audience', 'general consumers')}\n"
         
-        Product Name: {product_data.get("name", "")}
-        Brand: {product_data.get("brand", "")}
-        Category: {product_data.get("category", "")}
-        Price: ${product_data.get("price", "")}
-        Features: {", ".join(product_data.get("features", []))}
-
-        Write the title based on these given styles:
-        Tone: {style.get("tone", "professional")}
-        Length: {style.get("length", "medium")}
-
-        Now format the title in this way:
+        prompt += f"and apply the following tone and style: {style.get("tone", "professional")}, {style.get("length", "medium")}\n"
+        prompt += f"""Return your response: title and description in this format:
+        
         Title: [SEO Title]
         Description: [SEO Meta Description]
-"""
-        
+        """
+
         return prompt
     
     def _create_marketing_email_prompt(self, product_data: Dict[str, Any], style: Dict[str, Any]) -> str:
@@ -427,22 +440,48 @@ class LLMService:
         # CANDIDATE: IMPLEMENT THIS FUNCTION
         
         prompt = f"""Generate a marketing email for a product with the following details:
-        Product Name: {product_data.get("name", "")} 
-        Brand: {product_data.get("brand", "")}
-        Price: ${product_data.get("price", "")}
-        Category: {product_data.get("category", "")}
-        Features: {", ".join(product_data.get("features", []))}
+        """
 
-        Write the email in this style:
-        Tone: {style.get("tone", "enthusiastic")}
-        Length: {style.get("length", "medium")}
-        Now format the email in this way:
+        # Add any additional instructions or context for the email
+        prompt += f"\nProduct Name: {product_data.get("name", "")}\n"
+        if(product_data.get("brand", "")):
+            prompt += f"Brand: {product_data.get("brand", "")}\n"
+        #Category:
+        if(product_data.get("category", "")):
+            prompt += f"Category: {product_data.get("category", "")}\n"
+        if(product_data.get('basic_description')):
+            prompt += f"Basic Description: {product_data['basic_description']}\n"
+        if(product_data.get('features')):
+            prompt += "\nKey Selling Points:\n"
+            for feature in product_data['features']:
+                prompt += f"- {feature}\n"
+        if(product_data.get('price', "")):
+            prompt += f"Price: ${product_data.get('price', '')}\n"
+        
+        prompt += "Write your email in the following style:"
+        
+        # Target audience:
+        if(product_data.get('audience')):
+            prompt += f"Consider the target audience:\n {product_data.get('audience', 'general consumers')}\n"
+        # Style guidance
+        prompt += f"\nOverall tone should be: {style.get('tone', 'enthusiastic and casual')}\n"
+        # Length guidance
+        if style.get('length') == 'short':
+            prompt += "LENGTH: Concise, approximately 75-100 words\n"
+        elif style.get('length') == 'long':
+            prompt += "LENGTH: Detailed, approximately 200-250 words\n"
+        else:
+            prompt += "LENGTH: Balanced, approximately 150-175 words\n"
 
+        # Structure guidance
+        prompt += "\n Format Your response exactly in this manner:\n"
+        prompt += """
+        
         Subject Line: [Email Subject]
 
         Saluation: [Greeting] 
-        Email Body: [Email Body] """
-        
+        Email Body: [Email Body]"""
+
         return prompt
     
     def _create_social_media_prompt(self, product_data: Dict[str, Any], style: Dict[str, Any], platforms: Dict[str, bool]) -> str:
@@ -567,7 +606,7 @@ And so on for each requested platform.
         
         prompt = f"""Given the following partial product data, fill in the missing fields to make the data more complete and market ready.
         For completed values, do not modify or change them in any way. For missing values, use external domain knowledge to infer the best possible values for this
-        product of the same category.
+        product of the category if applicable.
         
         Partial Product Data: {json.dumps(product_data, indent=2)}
 
@@ -590,22 +629,56 @@ And so on for each requested platform.
         # CANDIDATE: IMPLEMENT THIS FUNCTION
         keywords = style.get("keywords", [])
 
-        prompt = f"""Generate a high-quality product image for {product_data.get("name", "product")}, made by {product_data.get("brand", "")}, in the {product_data.get("category", "")} category.
-        The product has features: {",".join(product_data.get("features", []))}.
-        It comes in the following colors: {",".join(product_data.get("colors", []))}, and is made of {",".join(product_data.get("materials", []))}.
-        Consider the style keywords: {",".join(keywords)} the product to look {",".join(product_data.get("vibe", []))}, placed in a background that feels natural for its use.
-        For example:
+        prompt = f"""Generate a high-quality product 600 x 600 pixel image of a product based on the given details:"""
+        # Key information:
+        prompt += f"\n\n Product Name: {product_data.get('name', '')}\n"
+        if(product_data.get("brand", "")):
+            prompt += f"Brand: {product_data.get("brand", "")}\n"
+        if(product_data.get("category", "")):
+            prompt += f"Category: {product_data.get("category", "")}\n"
+
+        prompt += "\n"
+        #Basic description:
+        if(product_data.get('basic_description')):
+            prompt += f"Basic Description: {product_data['basic_description']}\n"
+        # Add product features
+        if(product_data.get('features')):
+            prompt += "\nKEY FEATURES:\n"
+            for feature in product_data['features']:
+                prompt += f"• {feature}\n"
+        # Add color options
+        if product_data.get('colors') and len(product_data.get('colors', [])) > 0:
+            prompt += f"\nAVAILABLE COLORS: {', '.join(product_data['colors'])}\n"
+
+        #Vibe
+        if(product_data.get('vibe')):
+            prompt += f"\nVibe: {','.join(product_data['vibe'])}\n"
+        #Tags:
+        if(product_data.get('tags')):
+            prompt += f"\nProduct Tags: {','.join(product_data['tags'])}\n"
+        
+        prompt += "\n Consider this target audience:"
+        target_audience = style.get('audience', 'general consumers')
+        prompt += f"\nTarget Audience: {target_audience}\n"
+
+        prompt += "\n\n I need the image to have this type of background:"
+        if(product_data.get('background')):
+            prompt += f"\Style: {",".join(product_data['background'])}\n"
+        else:
+            prompt += f"\Style: Contextual\n"
+            prompt += f"""\n For example:
         - If it's a kitchen appliance, place it in a kitchen setting, like the kitchen counter.
         - If it's a fashion item, place it in a lifestyle setting.
         - If it's a electronic device such as a phone, place it on a stand.
         - If it's a furniture item, place it in a room setting while being able to showcase the product item.
-        - For items like Yoga mats, place it on hardwood or clean indoor floor surfaces.
-
+        - For items like Yoga mats, place it on hardwood or clean indoor floor surfaces."""
+            
+        #User input:
+        if(len(keywords) > 0):
+            prompt += "\n Tailor your image to the user preferred specifications:"
+            prompt += f"\nStyle: {",".join(keywords)}\n"
         
-        U
-        Ensure the product is in the centre of the image, with no logos, watermarks, or text.
-        """
-        
+        prompt += "\nEnsure the product is in the centre of the image, completely visible, with no logos, watermarks, or text."
         return prompt
     
     # Helper methods for parsing LLM responses

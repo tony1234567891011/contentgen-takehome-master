@@ -12,6 +12,8 @@ const GeneratedContent = ({ content, contentTypes, isLoading }) => {
   const [editedSEOTitle, setEditedSEOTitle] = useState("");
   const [editedSEODescription, setEditedSEODescription] = useState("");
 
+  const [isEditingEmailSubject, setIsEditingEmailSubject] = useState(false);
+  const [editedEmailSubject, setEditedEmailSubject] = useState("");
   const [isEditingEmail, setIsEditingEmail] = useState(false);
   const [editedEmail, setEditedEmail] = useState("");
 
@@ -211,10 +213,48 @@ const GeneratedContent = ({ content, contentTypes, isLoading }) => {
               <h4>Subject Line</h4>
               <div className="content-box">
                 <p>{content.marketing_email.subject}</p>
+                {isEditingEmailSubject ? (
+                <input
+                  value={editedEmailSubject}
+                  //Take input
+                  onChange={(e) => setEditedEmailSubject(e.target.value)}
+                  style={{ width: '100%' }}
+                  />
+              ) : null}
               </div>
+              {/*Button to copy subject line, unneeded?
               <button className="copy-btn" onClick={() => navigator.clipboard.writeText(content.marketing_email.subject)}>
                 Copy Subject
               </button>
+
+              */}
+
+              {/* Since in editing, handle the modification:*/}
+              {isEditingEmailSubject ? (
+              <div>
+                <button className="marketing-save-btn" onClick={() => //Handle save logic
+                {content.marketing_email.subject = editedEmailSubject;
+                setIsEditingEmailSubject(false)
+                setEditedEmailSubject(content.marketing_email.subject);
+                }}>Save</button>
+                <button
+                      className="marketing-cancel-btn"
+                      onClick={() => {
+                        setIsEditingEmailSubject(false);
+                        setEditedEmailSubject(content.marketing_email.subject);
+                      }}
+                    >
+                      Cancel
+                    </button>
+              </div>
+            ) : (
+              <div>
+                <button className="marketing-edit-btn" onClick={() => {
+                setIsEditingEmailSubject(true);
+                setEditedEmailSubject(content.marketing_email.subject);
+              }}>Edit</button>
+              </div>
+            )}  
             </div>
             
             <div className="content-section">
@@ -223,10 +263,49 @@ const GeneratedContent = ({ content, contentTypes, isLoading }) => {
                 {content.marketing_email.body.split('\n').map((paragraph, index) => (
                   <p key={index}>{paragraph}</p>
                 ))}
+                {isEditingEmail ? (
+                <textarea
+                  value={editedEmail}
+                  //Take input
+                  onChange={(e) => setEditedEmail(e.target.value)}
+                  style={{ width: '100%' }}
+                  rows={11}
+                  />
+              ) : null}
               </div>
+
+              {/*Body, unneeded?
               <button className="copy-btn" onClick={() => navigator.clipboard.writeText(content.marketing_email.body)}>
                 Copy Body
               </button>
+              */}
+
+              {isEditingEmail ? (
+              <div>
+                <button className="marketing-body-save-btn" onClick={() => //Handle save logic
+                {content.marketing_email.body = editedEmail;
+                setIsEditingEmail(false)
+                setEditedEmail(content.marketing_email.body);
+                }}>Save</button>
+                <button
+                      className="marketing-body-cancel-btn"
+                      onClick={() => {
+                        setIsEditingEmail(false);
+                        setEditedEmail(content.marketing_email.body);
+                      }}
+                    >
+                      Cancel
+                    </button>
+              </div>
+            ) : (
+              <div>
+                <button className="marketing-body-edit-btn" onClick={() => {
+                setIsEditingEmail(true);
+                setEditedEmail(content.marketing_email.body);
+              }}>Edit</button>
+              </div>
+            )}
+    
             </div>
             
             <button className="copy-btn copy-all" onClick={() => navigator.clipboard.writeText(
