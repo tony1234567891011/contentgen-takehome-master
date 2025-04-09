@@ -30,7 +30,7 @@ To reflect, if I managed my time better, I believe that it would have allowed me
 - UX dilemmas - Figuring how ways to improve how the user interface could be more intuitive. Removed unncessary 
 - Compatibility issues with my technologies, as my first alternative was using Gemini, however defaulted to OpenAI API due to Pydantic 1.10.7.
 - Frontend backend sync errors, leading to products.json failing to show, or failing to generate. Fixed by rebuilding the API endpoint, returning in json format.
-- Time management, which was solved by planning out time to implement each feature.
+- Time management, which was solved by planning out time to implement each feature, while balancing examination periods.
 - LLM's hallucinating with some inputs especially relating to backgrounds, improved its content accuracy through providing real time examples, information.
   
 ## Time Spent - 20 hours divided into: Up to 10 hours of coding + debugging and 5 hours to review any changes I would like to make and 5 hours to familiarise with tech stack.
