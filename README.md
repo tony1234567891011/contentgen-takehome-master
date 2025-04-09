@@ -1,15 +1,6 @@
 # i95dev AI Engineering Intern - Take-Home Assignment
 ## AI-Powered Product Description Generator
 
-Complete the assignment within 7 days of receiving it
-Submit by replying to the original assessment email with:
-GitHub repository link
-Brief overview of your approach (1-2 paragraphs)
-Any challenges you faced and how you overcame them
-Time spent on the assignment
-
-Welcome to Tony Lin's submission to the i95dev AI Engineering Intern take-home assignment! Below, I will explain all of my methodologies, challenges, and the resources I spent into this project.
-
 As a brief overview, my job is to build a product description generator that leverages LLMs to create compelling, SEO-optimized product descriptions and marketing copy based on basic product information. The system should also be able to generate missing product fields and product images using all available product data.
 
 ### Methodologies:
