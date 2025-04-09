@@ -393,7 +393,7 @@ class LLMService:
         # TODO: Implement your prompt engineering strategy for SEO content
         # CANDIDATE: IMPLEMENT THIS FUNCTION
         
-        prompt = f"""Generate SEO-optimized title and meta description for the following product using (some or all) these details:
+        prompt = f"""Imagine you are an SEO expert. Generate SEO-optimized title and meta description for the following product using (some or all) these details:
             """
         # Brand:
         if(product_data.get("brand", "")):
@@ -439,7 +439,7 @@ class LLMService:
         # TODO: Implement your prompt engineering strategy for marketing emails
         # CANDIDATE: IMPLEMENT THIS FUNCTION
         
-        prompt = f"""Generate a marketing email for a product with the following details:
+        prompt = f"""You are a writer for a marketing campaign. Generate a marketing email to clients for a product with the following details:
         """
 
         # Add any additional instructions or context for the email
@@ -604,7 +604,7 @@ And so on for each requested platform.
         # TODO: Implement your prompt engineering strategy for generating missing fields
         # CANDIDATE: IMPLEMENT THIS FUNCTION
         
-        prompt = f"""Given the following partial product data, fill in the missing fields to make the data more complete and market ready.
+        prompt = f"""You are an expert product description writer. Given the following partial product data, fill in the missing fields to make the data more complete and market ready.
         For completed values, do not modify or change them in any way. For missing values, use external domain knowledge to infer the best possible values for this
         product of the category if applicable.
         
